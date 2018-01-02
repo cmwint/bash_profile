@@ -1,0 +1,161 @@
+################
+#   Startup
+################
+
+echo '------------------------------
+..::| 🙋 🌍 🐙 🐈 🌞 💐 🎉 🎁 👗  |::..
+------------------------------';
+
+################
+#   Path
+################
+# homebrew had me change this path
+export PATH=/usr/local/bin:$PATH
+# add git
+export PATH=/usr/local/git/bin/:$PATH
+
+################
+#   Kill Useless Processes
+################
+pgrep 'AAM Updates Notifier' && echo 'Killing AAM Updates Notifier' && killall 'AAM Updates Notifier'
+
+################
+#   Editor
+################
+export EDITOR=nano
+
+
+################
+#   Aliases
+################
+
+# folders
+alias cds='cd /Applications/MAMP/htdocs/sites/'
+alias cdd='cd ~/Desktop'
+
+# bash profile
+alias sourcebp='source ~/.bash_profile'
+
+# eliminate stupid processes
+alias killadobe="killall 'AAM Updates Notifier'"
+
+# git helpers
+alias ga='git add'
+alias gpu='git push'
+alias gs='git status'
+alias gd='git diff --name-only'
+alias gc='git checkout'
+alias gpu='git pull'
+alias gcl='git clone'
+alias gb='git branch -a'
+alias gp='git push'
+alias gcb='git checkout -b'
+alias gr='git remote -v'
+alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias glg=gl
+alias gdb='gulp db-exp && git add --all `git rev-parse --show-toplevel` && git commit --amend -m "`git log -1 --pretty=%B`"'
+alias gm='git commit -m '
+
+function gme() {
+    echo "running: git merge --no-ff \"$1\" -m \"$2\""
+    git merge --no-ff "$1" -m "\"$2\""
+}
+function gmex() {
+    echo "running: git merge --no-ff -X theirs \"$1\" -m \"$2\""
+    git merge --no-ff -X theirs "$1" -m "\"$2\""
+}
+function gmedb() {
+    echo "running: git merge --no-ff -X theirs \"$1\" -m \"$2\""
+    git merge --no-ff -X theirs "$1" -m "\"$2\"" && gdb
+}
+function gaa() {
+    echo "running: git add --all \`git rev-parse --show-toplevel\`"
+    git add --all `git rev-parse --show-toplevel`
+}
+function gam() {
+    echo "running: git add --all \`git rev-parse --show-toplevel\` && git commit -m \"\$*\""
+    git add --all `git rev-parse --show-toplevel` && git commit -m "\"$1\""
+}
+function gamend() {
+    echo 'running: git commit --amend -m "`git log -1 --pretty=%B`"'
+    git commit --amend --no-verify -m "`git log -1 --pretty=%B`"
+}
+
+
+################
+#   Coloring
+################
+
+#enables color in the terminal bash shell export
+CLICOLOR=1
+#sets up the color scheme for list export
+LSCOLORS=gxfxcxdxbxegedabagacad
+#enables color for iTerm
+export TERM=xterm-color
+#sets up proper alias commands when called
+alias ls='ls -G'
+alias ll='ls -hl'
+
+################
+#   Prompt
+################
+
+txtblk='\e[0;30m' # Black - Regular
+txtred='\e[0;31m' # Red
+txtgrn='\e[0;32m' # Green
+txtylw='\e[0;33m' # Yellow
+txtblu='\e[0;34m' # Blue
+txtpur='\e[0;35m' # Purple
+txtcyn='\e[0;36m' # Cyan
+txtwht='\e[0;37m' # White
+ 
+bldblk='\e[1;30m' # Black - Bold
+bldred='\e[1;31m' # Red
+bldgrn='\e[1;32m' # Green
+bldylw='\e[1;33m' # Yellow
+bldblu='\e[1;34m' # Blue
+bldpur='\e[1;35m' # Purple
+bldcyn='\e[1;36m' # Cyan
+bldwht='\e[1;37m' # White
+ 
+unkblk='\e[4;30m' # Black - Underline
+undred='\e[4;31m' # Red
+undgrn='\e[4;32m' # Green
+undylw='\e[4;33m' # Yellow
+undblu='\e[4;34m' # Blue
+undpur='\e[4;35m' # Purple
+undcyn='\e[4;36m' # Cyan
+undwht='\e[4;37m' # White
+ 
+bakblk='\e[40m'   # Black - Background
+bakred='\e[41m'   # Red
+badgrn='\e[42m'   # Green
+bakylw='\e[43m'   # Yellow
+bakblu='\e[44m'   # Blue
+bakpur='\e[45m'   # Purple
+bakcyn='\e[46m'   # Cyan
+bakwht='\e[47m'   # White
+ 
+txtrst='\e[0m'    # Text Reset
+
+function git_info() {
+    # check if we're in a git repo
+    git rev-parse --is-inside-work-tree &>/dev/null || return
+
+    # quickest check for what branch we're on
+    branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
+
+    # check if it's dirty (via github.com/sindresorhus/pure)
+    dirty=$(git diff --quiet --ignore-submodules HEAD &>/dev/null; [ $? -eq 1 ]&& echo -e "*")
+
+    echo '['$branch$dirty']'
+}
+
+print_before_the_prompt () {
+    printf "\n$bldpur%s $txtpur%s\n$txtrst" "$PWD" "$(git_info)"
+}
+
+ 
+PROMPT_COMMAND=print_before_the_prompt
+ 
+PS1='😻  '
